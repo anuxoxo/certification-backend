@@ -8,15 +8,18 @@ const random = uniqueRandom(10, 9999);
 // const path = require('path');
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 // mongoDB config
-mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, 'useCreateIndex': true })
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, 'useCreateIndex': true })
     .then(() => {
         console.log('Connected to mongoDB.');
     })
     .catch(err => console.error(err.message));
 
 import Employee from './model.js';
+
+// Image uploading
 
 // import multer from 'multer';
 
@@ -39,8 +42,20 @@ app.use(express.json());
 app.route('/')
     .get((req, res) => {
         Employee.find((err, employee) => {
-            if (err) res.status(500).send(err);
-            else res.status(200).send(employee);
+            if (err) {
+                return res.json({
+                    success: false,
+                    message: err.message,
+                });
+            }
+
+            return res.json({
+                success: true,
+                message: "Employee list found.",
+                "data": { employee }
+
+            });
+
         })
     })
     .post((req, res) => {
@@ -73,50 +88,75 @@ app.route('/')
 
         newEmployee.save((err) => {
             if (err) {
-                res.status(500).send(err.message);
+                return res.json({
+                    success: false,
+                    message: err.message,
+                });
             }
-            else {
-                res.status(200).send("Successfully added a new employee.");
-            }
+
+            return res.json({
+                success: true,
+                message: "Successfully added a new employee.",
+            });
+
         });
     });
 
 app.route("/:empId")
     .get((req, res) => {
-        Employee.findOne({ employeeId: req.params.empId }, (err, Employee) => {
-            if (Employee) {
-                res.status(200).send(Employee);
+
+        Employee.findOne({ employeeId: req.params.empId }, (err, employee) => {
+
+            if (employee) {
+                return res.json({
+                    success: true,
+                    message: "Found employee with id: " + employee.employeeId,
+                    "data": { employee }
+                });
             }
-            else {
-                res.send("No matching Employees found.");
-            }
+            return res.json({
+                success: false,
+                message: "No employees with employee id: " + req.params.empId + " found.",
+            });
         });
     })
     .patch((req, res) => {
+
         Employee.updateOne({ employeeId: req.params.empId },
             { $set: req.body },
             (err) => {
                 if (!err) {
-                    res.status(200).send("Successfully updated!");
+                    return res.json({
+                        success: true,
+                        message: "Successfully updated!",
+                    });
                 }
-                else {
-                    res.send(err.message);
-                }
+
+                return res.json({
+                    success: false,
+                    message: err.message,
+                });
             })
     })
     .delete((req, res) => {
         Employee.deleteOne({ employeeId: req.params.empId },
             (err) => {
                 if (!err) {
-                    res.status(200).send("Successfully deleted!");
-                } else {
-                    res.status(500).send(err.message);
+                    return res.json({
+                        success: true,
+                        message: "Successfully deleted!",
+                    });
                 }
+
+                return res.json({
+                    success: false,
+                    message: err.message,
+                });
             })
     });
 
-app.listen(process.env.PORT, err => {
+app.listen(PORT, err => {
     if (err)
         throw err;
-    console.log('Server listening on port', process.env.port)
+    console.log('Server listening on port', PORT)
 });
