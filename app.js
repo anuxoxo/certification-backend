@@ -11,15 +11,26 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // mongoDB config
-mongoose.connect(process.env.MONGO_URI, {
-    useNewUrlParser: true, useUnifiedTopology: true,
-    'useCreateIndex': true,
-    'useFindAndModify': false
-})
-    .then(() => {
-        console.log('Connected to mongoDB.');
-    })
-    .catch(err => console.error(err.message));
+// mongoose.connect(process.env.MONGO_URI, {
+//     useNewUrlParser: true, useUnifiedTopology: true,
+//     'useCreateIndex': true,
+//     'useFindAndModify': false
+// })
+//     .then(() => {
+//         console.log('Connected to mongoDB.');
+//     })
+//     .catch(err => console.error(err.message));
+
+try {
+    await mongoose.connect(process.env.MONGO_URI, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+        useCreateIndex: true,
+    });
+    console.log('Server connected to MongoDb!');
+} catch (err) {
+    console.error(err);
+}
 
 import Employee from './model.js';
 
