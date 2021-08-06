@@ -51,20 +51,20 @@ import Employee from './model.js';
 
 // middlewares
 app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+app.use(express.send());
 
 // api endpoints
 app.route('/')
     .get((req, res) => {
         Employee.find({}, (err, employee) => {
             if (err) {
-                return res.json({
+                return res.send({
                     success: false,
                     message: err.message,
                 });
             }
 
-            return res.json({
+            return res.send({
                 success: true,
                 message: "Employee list found.",
                 "data": { employee }
@@ -103,13 +103,13 @@ app.route('/')
 
         newEmployee.save((err) => {
             if (err) {
-                return res.json({
+                return res.send({
                     success: false,
                     message: err.message,
                 });
             }
 
-            return res.json({
+            return res.send({
                 success: true,
                 message: "Successfully added a new employee.",
             });
@@ -123,13 +123,13 @@ app.route("/:empId")
         Employee.findOne({ employeeId: req.params.empId }, (err, employee) => {
 
             if (employee) {
-                return res.json({
+                return res.send({
                     success: true,
                     message: "Found employee with id: " + employee.employeeId,
                     "data": { employee }
                 });
             }
-            return res.json({
+            return res.send({
                 success: false,
                 message: "No employees with employee id: " + req.params.empId + " found.",
             });
@@ -141,13 +141,13 @@ app.route("/:empId")
             { $set: req.body },
             (err) => {
                 if (!err) {
-                    return res.json({
+                    return res.send({
                         success: true,
                         message: "Successfully updated!",
                     });
                 }
 
-                return res.json({
+                return res.send({
                     success: false,
                     message: err.message,
                 });
@@ -157,13 +157,13 @@ app.route("/:empId")
         Employee.deleteOne({ employeeId: req.params.empId },
             (err) => {
                 if (!err) {
-                    return res.json({
+                    return res.send({
                         success: true,
                         message: "Successfully deleted!",
                     });
                 }
 
-                return res.json({
+                return res.send({
                     success: false,
                     message: err.message,
                 });
