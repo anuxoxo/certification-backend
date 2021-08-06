@@ -51,7 +51,7 @@ import Employee from './model.js';
 
 // middlewares
 app.use(express.urlencoded({ extended: true }));
-app.use(express.send());
+app.use(express.json());
 
 // api endpoints
 app.route('/')
