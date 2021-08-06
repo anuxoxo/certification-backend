@@ -18,18 +18,18 @@ mongoose.connect(process.env.MONGO_URL, { useNewUrlParser: true, useUnifiedTopol
 
 import Employee from './model.js';
 
-import multer from 'multer';
+// import multer from 'multer';
 
-var storage = multer.diskStorage({
-    destination: (req, file, cb) => {
-        cb(null, 'uploads')
-    },
-    filename: (req, file, cb) => {
-        cb(null, file.fieldname + '-' + Date.now())
-    }
-});
+// var storage = multer.diskStorage({
+//     destination: (req, file, cb) => {
+//         cb(null, 'uploads')
+//     },
+//     filename: (req, file, cb) => {
+//         cb(null, file.fieldname + '-' + Date.now())
+//     }
+// });
 
-var upload = multer({ storage: storage });
+// var upload = multer({ storage: storage });
 
 // middlewares
 app.use(express.urlencoded({ extended: true }));
@@ -56,10 +56,10 @@ app.route('/')
         const year = yoj.toString().substr(-2);
         const employeeId = `${year}V${random()}`;
 
-        const profileImg = {
-            data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
-            contentType: 'image/png'
-        }
+        // const profileImg = {
+        //     data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+        //     contentType: 'image/png'
+        // }
 
         const newEmployee = new Employee({
             employeeId: employeeId,
@@ -67,7 +67,7 @@ app.route('/')
             yog: yog,
             dept: dept,
             yoj: yoj,
-            profileImg: profileImg,
+            // profileImg: profileImg,
             project: project
         });
 
