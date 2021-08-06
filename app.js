@@ -11,7 +11,11 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // mongoDB config
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true, 'useCreateIndex': true, 'useFindAndModify': false })
+mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true, useUnifiedTopology: true,
+    'useCreateIndex': true,
+    'useFindAndModify': false
+})
     .then(() => {
         console.log('Connected to mongoDB.');
     })
@@ -41,7 +45,7 @@ app.use(express.json());
 // api endpoints
 app.route('/')
     .get((req, res) => {
-        Employee.find((err, employee) => {
+        Employee.find({}, (err, employee) => {
             if (err) {
                 return res.json({
                     success: false,
