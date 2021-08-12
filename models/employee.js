@@ -1,4 +1,4 @@
-import mongoose from 'mongoose';
+const mongoose = require('mongoose');
 
 const employeeSchema = new mongoose.Schema({
     employeeId: {
@@ -36,4 +36,4 @@ const employeeSchema = new mongoose.Schema({
     ]
 });
 
-export default new mongoose.model('Employee', employeeSchema);
+module.exports = mongoose.model('Employee', employeeSchema);

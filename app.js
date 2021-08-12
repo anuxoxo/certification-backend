@@ -1,28 +1,17 @@
-import 'dotenv/config.js'
-import express from 'express';
-import mongoose from 'mongoose';
-import uniqueRandom from 'unique-random';
-const random = uniqueRandom(10, 9999);
-
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+var cors = require('cors');
+const uniqueRandom = require('./uniqueRandom');
 // const fs = require('fs');
 // const path = require('path');
 
 const app = express();
+const random = uniqueRandom(10, 9999);
 const PORT = process.env.PORT || 3000;
 
-// mongoDB config
-// mongoose.connect(process.env.MONGO_URI, {
-//     useNewUrlParser: true, useUnifiedTopology: true,
-//     'useCreateIndex': true,
-//     'useFindAndModify': false
-// })
-//     .then(() => {
-//         console.log('Connected to mongoDB.');
-//     })
-//     .catch(err => console.error(err.message));
-
 try {
-    await mongoose.connect(process.env.MONGO_URI, {
+    mongoose.connect(process.env.MONGO_URI, {
         useNewUrlParser: true,
         useUnifiedTopology: true,
         useCreateIndex: true,
@@ -32,11 +21,11 @@ try {
     console.error(err);
 }
 
-import Employee from './model.js';
+const Employee = require('./models/employee.js');
 
 // Image uploading
 
-// import multer from 'multer';
+// const multer = require('multer');
 
 // var storage = multer.diskStorage({
 //     destination: (req, file, cb) => {
@@ -52,6 +41,7 @@ import Employee from './model.js';
 // middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(cors());
 
 // api endpoints
 app.route('/')
@@ -131,7 +121,7 @@ app.route("/:empId")
             }
             return res.send({
                 success: false,
-                message: "No employees with employee id: " + req.params.empId + " found.",
+                message: "No employees with employee id " + req.params.empId + " found.",
             });
         });
     })
