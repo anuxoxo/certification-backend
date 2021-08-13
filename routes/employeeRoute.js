@@ -66,11 +66,11 @@ app.route('/login')
             } else {
                 passport.authenticate("local")(req, res, () => {
 
-                    res.redirect('/employees');
-                    // res.json({
-                    //     success: true,
-                    //     message: "User logged in successfully!"
-                    // });
+                    // res.redirect('/employees');
+                    res.json({
+                        success: true,
+                        message: "User logged in successfully!"
+                    });
                 })
             }
         })
@@ -123,8 +123,9 @@ app.route('/employees')
             } = req.body;
 
             const year = yoj.toString().substr(-2);
-            const employeeId = `VT${random()}`;
+            const employeeId = `${year}V${random()}`;
 
+            // check if uploaded file is img
             if (req.file) {
 
                 const mimetype = req.file.mimetype;
@@ -138,10 +139,10 @@ app.route('/employees')
 
             }
 
-            // ? How to access img in Frontend
+            // ------- How to access img in Frontend -------
 
-            // <img src="data:image/<%=image.img.contentType%>;base64,
-            // 			<%=image.img.data.toString('base64')%>">
+            // <img src="data:image/{image.img.contentType};base64,
+            // 			{image.img.data.toString('base64')}">
 
             const newEmployee = new Employee({
                 employeeId, employeeName, yog, dept, yoj, profileImg, project
@@ -192,8 +193,15 @@ app.route("/employees/:empId")
 
         if (req.isAuthenticated()) {
 
-            req.body.employeeName = "hello";
-            
+            // update employeeId if yoj is changed
+            if (req.body.hasOwnProperty("yoj")) {
+
+                const year = req.body.yoj.toString().substr(-2);
+                const employeeId = `${year}V${random()}`;
+                req.body.employeeId = employeeId;
+            }
+
+            // update profile img
             if (req.file) {
 
                 const mimetype = req.file.mimetype;

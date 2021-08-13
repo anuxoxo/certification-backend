@@ -2,18 +2,12 @@ require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
-const ejs = require('ejs');
-
-
 
 require('./models/employeeModel');
 require('./models/user');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
 
 // middlewares
 app.use(express.urlencoded({ extended: true }));
