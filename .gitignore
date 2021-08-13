@@ -1,4 +1,5 @@
 schema
+auth.js
 
 # Logs
 logs

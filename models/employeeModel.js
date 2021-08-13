@@ -1,4 +1,6 @@
 const mongoose = require('mongoose');
+const fs = require('fs');
+const path = require('path');
 
 const employeeSchema = new mongoose.Schema({
     employeeId: {
@@ -24,8 +26,14 @@ const employeeSchema = new mongoose.Schema({
     },
     profileImg:
     {
-        data: Buffer,
-        contentType: String
+        type: {
+            data: Buffer,
+            contentType: String
+        },
+        default: {
+            data: fs.readFileSync(path.join(__dirname, "../uploads/no-photo.png")),
+            contentType: 'image/*'
+        }
     },
     project: [
         {
@@ -36,4 +44,4 @@ const employeeSchema = new mongoose.Schema({
     ]
 });
 
-module.exports = mongoose.model('Employee', employeeSchema);
+mongoose.model('Employee', employeeSchema);
