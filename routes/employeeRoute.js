@@ -50,9 +50,6 @@ var upload = multer({ storage: storage });
 
 // Login admin
 app.route('/login')
-    .get((req, res) => {
-        res.render('login');
-    })
     .post((req, res) => {
 
         const user = new User({
@@ -132,7 +129,7 @@ app.route('/employees')
 
                 if (mimetype.split('/')[0] === 'image') {
                     profileImg = {
-                        data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+                        data: fs.readFileSync(path.join(__dirname + '../uploads/' + req.file.filename)),
                         contentType: 'image/*'
                     }
                 }
@@ -162,6 +159,14 @@ app.route('/employees')
                 });
 
             });
+
+            if (req.file) {
+                fs.unlink(path.join(__dirname + '../uploads/' + req.file.filename), function (err) {
+                    if (err) throw err;
+                    console.log('File deleted!');
+                });
+            }
+
         } else {
             res.json({ success: false, message: "Please log in." })
         }
@@ -208,7 +213,7 @@ app.route("/employees/:empId")
 
                 if (mimetype.split('/')[0] === 'image') {
                     profileImg = {
-                        data: fs.readFileSync(path.join(__dirname + '/uploads/' + req.file.filename)),
+                        data: fs.readFileSync(path.join(__dirname + '../uploads/' + req.file.filename)),
                         contentType: 'image/*'
                     }
                     req.body.profileImg = profileImg;
@@ -231,6 +236,14 @@ app.route("/employees/:empId")
                         message: err.message,
                     });
                 })
+
+            if (req.file) {
+                fs.unlink(path.join(__dirname + '/uploads/' + req.file.filename), function (err) {
+                    if (err) throw err;
+                    console.log('File deleted!');
+                });
+            }
+            
         } else {
             res.json({ success: false, message: "Please log in." })
         }
