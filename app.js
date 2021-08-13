@@ -29,11 +29,6 @@ mongoose
     .then(() => { console.log("Server connected to MongoDB.") })
     .catch(err => console.error(err));
 
-app.get('/', (req, res) => {
-    req.body.copy = "copy me";
-    console.log(req.body);
-})
-
 app.listen(PORT, err => {
     if (err)
         console.log(err);
